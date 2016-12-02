@@ -112,6 +112,18 @@ DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:kDZNSupplementaryViewIdentifier];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    negativeSpacer.width = -10;
+    UIButton *leftBarButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [leftBarButton setImage:[UIImage imageNamed:@"backBlue"] forState:UIControlStateNormal];
+    [leftBarButton addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [leftBarButton setFrame:CGRectMake(0, 0, 44, 44)];
+    self.navigationItem.leftBarButtonItems = @[negativeSpacer, [[UIBarButtonItem alloc] initWithCustomView:leftBarButton]];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -123,18 +135,20 @@ DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
         }
         else {
 //            [self.searchController setActive:YES];
-//            [self.searchBar becomeFirstResponder];
+            [self.searchBar becomeFirstResponder];
         }
     }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    [self.searchController setActive:YES];
-    [self.searchController.searchBar becomeFirstResponder];
 }
 
+#pragma mark - Back
+
+- (void)backButtonPressed {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 #pragma mark - Getter methods
 
@@ -186,6 +200,7 @@ DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
         _searchController.hidesNavigationBarDuringPresentation = YES;
         
         UISearchBar *searchBar = _searchController.searchBar;
+        searchBar.tintColor = self.controller.barTintColor;
         searchBar.placeholder = NSLocalizedString(@"Search", nil);
         searchBar.text = self.controller.initialSearchTerm;
         searchBar.scopeButtonTitles = self.segmentedControlTitles;
@@ -879,12 +894,12 @@ DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 {
     NSString *text = nil;
     
-    if (self.error) {
-        text = NSLocalizedString(@"Error", nil);;
-    }
-    else if (!self.loading) {
-        text = NSLocalizedString(@"No Photos Found", nil);
-    }
+//    if (self.error) {
+//        text = NSLocalizedString(@"Error", nil);;
+//    }
+//    else if (!self.loading) {
+//        text = NSLocalizedString(@"No Photos Found", nil);
+//    }
     
     if (text) {
         return [[NSAttributedString alloc] initWithString:text attributes:nil];
@@ -896,23 +911,23 @@ DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 {
     NSString *text = nil;
     
-    if (self.error) {
-        NSError *underlyingError = self.error.userInfo[@"NSUnderlyingError"];
-        NSString *localizedDescription = underlyingError.localizedDescription;
-        
-        if (!localizedDescription) {
-            localizedDescription = self.error.localizedDescription;
-        }
-        
-        text = localizedDescription;
-    }
-    else if (!self.loading) {
-        text = NSLocalizedString(@"Make sure that all words are\nspelled correctly.", nil);
-    }
-    
-    if (text) {
-        return [[NSAttributedString alloc] initWithString:text attributes:nil];
-    }
+//    if (self.error) {
+//        NSError *underlyingError = self.error.userInfo[@"NSUnderlyingError"];
+//        NSString *localizedDescription = underlyingError.localizedDescription;
+//        
+//        if (!localizedDescription) {
+//            localizedDescription = self.error.localizedDescription;
+//        }
+//        
+//        text = localizedDescription;
+//    }
+//    else if (!self.loading) {
+//        text = NSLocalizedString(@"Make sure that all words are\nspelled correctly.", nil);
+//    }
+//    
+//    if (text) {
+//        return [[NSAttributedString alloc] initWithString:text attributes:nil];
+//    }
     return nil;
 }
 
